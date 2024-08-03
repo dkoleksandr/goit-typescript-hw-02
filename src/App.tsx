@@ -7,17 +7,18 @@ import ImageModal from "./components/ImageModal/ImageModal";
 import Loader from "./components/Loader/Loader";
 import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
+import { Photo } from "./components/photoTypes";
 
 const App = () => {
-  const [photos, setPhotos] = useState([]);
-  const [page, setPage] = useState(1);
-  const [query, setQuery] = useState("");
-  const [isLoading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [photos, setPhotos] = useState<Photo[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [query, setQuery] = useState<string>("");
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
+  useEffect((): void => {
+    const fetchData = async (): Promise<void> => {
       try {
         setError(false);
         setLoading(true);
@@ -33,35 +34,35 @@ const App = () => {
     query && fetchData();
   }, [page, query]);
 
-  const handleSearch = async (searchQuery) => {
+  const handleSearch = (searchQuery: string): void => {
     setQuery(searchQuery);
   };
-  const handleLoadMore = () => {
+  const handleLoadMore = (): void => {
     setPage(page + 1);
   };
 
-  const openModal = (image) => {
+  const openModal = (image: Photo): void => {
     setSelectedPhoto(image);
   };
 
-  const closeModal = () => {
+  const closeModal = (): void => {
     setSelectedPhoto(null);
   };
 
   return (
     <>
       <SearchBar onSubmit={handleSearch}></SearchBar>
-      {error && <ErrorMessage/>}
+      {error && <ErrorMessage />}
       {photos.length > 0 && (
         <ImageGallery photos={photos} onClick={openModal} />
       )}
       {isLoading && <Loader />}
-      {photos.length > 0 && <LoadMoreBtn handleLoadMore={handleLoadMore}/>}
+      {photos.length > 0 && <LoadMoreBtn handleLoadMore={handleLoadMore} />}
 
       <ImageModal
         isOpen={Boolean(selectedPhoto)}
         onRequestClose={closeModal}
-        photoForModal={selectedPhoto}
+        photoForModal={selectedPhoto!}
       />
     </>
   );
