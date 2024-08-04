@@ -23,7 +23,7 @@ const App = () => {
         setError(false);
         setLoading(true);
 
-        const data = await getSearchApi(query, page);
+        const data: Photo[] = await getSearchApi(query, page);
         setPhotos((prev) => [...prev, ...data]);
       } catch (error) {
         setError(true);
